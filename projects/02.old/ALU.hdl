@@ -1,0 +1,32 @@
+CHIP ALU {
+    IN x[16], y[16], zx, nx, zy, ny, f, no;
+    /*
+     * if zx then x = 0
+     * if nx then x = !x
+     * if zy then y = 0
+     * if ny then y = !y
+     * if f then out = x + y
+     * else out = x & y
+     * if no then out = !out
+     * if out = 0 then zr = 1 else zr = 0
+     * if out < 0 then ng = 1 else ng = 0
+     */
+    OUT out[16], zr, ng;
+
+    PARTS:
+    Mux16(a=x, b=false, sel=zx, out=x1);
+    Xor16With(in=x1, sel=nx, out=xx);
+
+    Mux16(a=y, b=false, sel=zy, out=y1);
+    Xor16With(in=y1, sel=ny, out=yy);
+
+    And16(a=xx, b=yy, out=xandy);
+    Add16(a=xx, b=yy, out=xaddy);
+    Mux16(a=xandy, b=xaddy, sel=f, out=t);
+    Xor16With(in=t, sel=no, out=end, out=out);
+
+    Or16Way(in=end, out=m);
+    Nand(a=m, b=m, out=zr);
+
+    First16(in=end, out=ng);
+}

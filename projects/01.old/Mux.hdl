@@ -1,0 +1,31 @@
+/* CHIP Mux {
+    IN a, b, sel;
+    OUT out;
+    PARTS:
+    
+    Or(a=sel, b=a, out=a1);
+    And(a=sel, b=b, out=b1);
+    Or(a=a1, b=b1, out=c);
+
+    Nand(a=sel, b=sel, out=o);
+    And(a=o, b=a, out=a2);
+    Or(a=o, b=b, out=b2);
+    Or(a=a2, b=b2, out=d);
+
+    And(a=c, b=d, out=out);
+} */
+
+// 鬼知道我怎麼想到的
+// Ghosts know how i come up with above
+
+// The fallowing is inspired by DMux
+CHIP Mux {
+    IN a, b, sel;
+    OUT out;
+
+    PARTS:
+    Nand(a=sel, b=sel, out=o);
+    And(a=o, b=a, out=ac);
+    And(a=sel, b=b, out=bc);
+    Or(a=ac, b=bc, out=out);
+}

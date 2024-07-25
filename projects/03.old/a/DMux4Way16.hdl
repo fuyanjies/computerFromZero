@@ -1,0 +1,10 @@
+CHIP DMux4Way16 {
+    IN in[16], sel[2];
+    OUT a[16], b[16], c[16], d[16];
+
+    PARTS:
+    
+    DMux16(in=in, sel=sel[1], a=t1, b=t2);
+    DMux16(in=t1, sel=sel[0], a=a, b=b);
+    DMux16(in=t2, sel=sel[0], a=c, b=d);
+}

@@ -1,0 +1,10 @@
+CHIP Not4 {
+    IN in[4];
+    OUT out[4];
+
+    PARTS:
+    Nand(a=in[0], b=in[0], out=out[0]);
+    Nand(a=in[1], b=in[1], out=out[1]);
+    Nand(a=in[2], b=in[2], out=out[2]);
+    Nand(a=in[3], b=in[3], out=out[3]);
+}

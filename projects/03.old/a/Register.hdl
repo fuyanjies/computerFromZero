@@ -1,0 +1,9 @@
+CHIP Register {
+    IN in[16], load;
+    OUT out[16];
+
+    PARTS:
+	Mux16(a=loop, b=in, sel=load, out=temp);
+	
+    DFF16(in=temp, out=loop, out=out);
+}

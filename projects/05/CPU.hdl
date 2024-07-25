@@ -1,0 +1,76 @@
+// CHIP CPU {
+//     IN inM[16], instruction[16], reset;
+//     OUT outM[16], writeM, addressM[15], pc[15];
+// 
+//     PARTS:
+//     
+//     Mux16(a=A, b=inM, sel=instruction[12], out=AM);
+//     ALU(x=D, y=AM, zx=instruction[11], nx=instruction[10], zy=instruction[9], 
+//         ny=instruction[8], f=instruction[7], no=instruction[6],
+//         out=alu, out=outM, zr=zr, ng=ng);
+//     
+//     And(a=ng, b=instruction[2], out=j1);
+//     And(a=zr, b=instruction[1], out=j2);
+//     Or(a=ng, b=zr, out=jt1);
+//     Not(in=jt1, out=jt2);
+//     And(a=jt2, b=instruction[0], out=j3);
+//     Or(a=j1, b=j2, out=jt3);
+//     Or(a=jt3, b=j3, out=jmp);
+// 
+//     And(a=instruction[15], b=instruction[5], out=toA);
+//     And(a=instruction[15], b=instruction[4], out=toD);
+//     And(a=instruction[15], b=instruction[3], out=toM, out=writeM);
+// 
+//     Mux16(a=inM, b=A, sel=instruction[15], out=at1);
+//     Mux16(a=at1, b=alu, sel=toA, out=at);
+//     Register(in=at, load=true, out=A, out[0..14]=addressM);
+//     Register(in=alu, load=toD, out=D);
+// 
+//     PC(in=A, inc=true, load=jmp, reset=reset, out[0..14]=pc);
+// }
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M?
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // Address of next instruction
+
+    PARTS:
+    // Put your code here:
+    Not(in=instruction[15], out=a);
+    Or(a=a, b=instruction[5], out=loadA);
+    Mux16(a=instruction, b=result, sel=instruction[15], out=i);
+    ARegister(in=i, load=loadA, out=A, out[0..14]=addressM);
+
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    DRegister(in=result, load=loadD, out=D);
+
+    Mux16(a=A, b=inM, sel=instruction[12], out=AM);
+    ALU(x=D, y=AM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=result, out=outM, zr=zr, ng=ng);
+
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    Not(in=zr, out=nzr);
+    Not(in=ng, out=nng);
+    And(a=nzr, b=nng, out=pos);
+
+    And(a=instruction[15], b=instruction[2], out=jlt);
+    And(a=instruction[15], b=instruction[1], out=jeq);
+    And(a=instruction[15], b=instruction[0], out=jgt);
+
+    And(a=jlt, b=ng, out=l1);
+    And(a=jeq, b=zr, out=l2);
+    And(a=jgt, b=pos, out=l3);
+
+    Or(a=l1, b=l2, out=tmp);
+    Or(a=tmp, b=l3, out=load);
+
+    PC(in=A, load=load, inc=true, reset=reset, out[0..14]=pc);
+}

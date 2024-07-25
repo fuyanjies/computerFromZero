@@ -1,0 +1,11 @@
+CHIP DMux16 {
+    IN in[16], sel;
+    OUT a[16], b[16];
+
+    PARTS:
+
+    DMux4(in=in[0..3], sel=sel, a=a[0..3], b=b[0..3]);
+    DMux4(in=in[4..7], sel=sel, a=a[4..7], b=b[4..7]);
+    DMux4(in=in[8..11], sel=sel, a=a[8..11], b=b[8..11]);
+    DMux4(in=in[12..15], sel=sel, a=a[12..15], b=b[12..15]);
+}
