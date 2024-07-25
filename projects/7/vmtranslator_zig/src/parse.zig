@@ -24,11 +24,14 @@ pub const Parse = struct {
 
     const Self = @This();
 
-    fn countArguments(self: *Self) void {
+    fn countArguments(self: *Self) bool {
         var arguments_iterator: std.mem.TokenIterator(u8, .scalar) = std.mem.tokenizeScalar(u8, self.command.?, ' ');
 
         if (arguments_iterator.next()) |argument| {
             self.argument1 = argument;
+            if (argument.len >= 2 and std.mem.eql(u8, "//", argument[0..2])) {
+                return false;
+            }
             self.command_type = self.argument1_table.get(argument) orelse {
                 // std.debug.print("{s}", .{argument});
                 unreachable;
@@ -54,6 +57,8 @@ pub const Parse = struct {
                 unreachable;
             },
         }
+
+        return true;
     }
 
     pub fn init(allocator: std.mem.Allocator) !Self {
@@ -114,10 +119,8 @@ pub const Parse = struct {
             if (iterator.next()) |command| {
                 self.command = command;
                 // std.debug.print("command: {s}\n", .{self.command.?});
-                if (command.len >= 2 and std.mem.eql(u8, "//", command[0..2])) {
+                if (!self.countArguments())
                     return self.hasMoreCommands();
-                }
-                self.countArguments();
                 return true;
             } else {
                 // std.debug.print("fuck\n", .{});
