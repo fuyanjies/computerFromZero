@@ -25,7 +25,6 @@ pub const VmTranslator = struct {
             try self.startDir(input);
         } else {
             if (!std.mem.eql(u8, ".vm", input[input.len - 3 .. input.len])) {
-                // std.debug.print("{s} {c} {c} {c}\n", .{ input, input[input.len - 3], input[input.len - 2], input[input.len - 1] });
                 unreachable;
             }
             const output: []u8 = try self.allocator.alloc(u8, input.len + 1);
@@ -36,7 +35,6 @@ pub const VmTranslator = struct {
             output[input.len - 2] = 'a';
             try self.coder.setFileName(output);
             try self.startFile(input);
-            // std.debug.print("aha\n", .{});
         }
 
         try std.io.getStdOut().writeAll("Done\n");
@@ -57,16 +55,12 @@ pub const VmTranslator = struct {
             if (std.fs.Dir.Entry.Kind.file != file.kind) continue;
             const file_name = try std.fmt.allocPrint(self.allocator, "{s}{s}", .{ input, file.name });
             defer self.allocator.free(file_name);
-            // std.mem.copyForwards(u8, file_name[0..input.len], input);
-            // std.mem.copyForwards(u8, file_name[input.len..], file.name);
             try self.startFile(file_name);
         }
     }
 
     fn startFile(self: *Self, input: []const u8) !void {
         var _input: std.fs.File = blk: {
-            // for (input) |c| std.debug.print("{c}", .{c});
-            // std.debug.print("\n", .{});
             if ('/' == input[0] or ':' == input[1]) {
                 break :blk try std.fs.openFileAbsolute(input, .{});
             } else {
@@ -76,15 +70,11 @@ pub const VmTranslator = struct {
         defer _input.close();
         try self.parser.openFile(&_input);
         defer self.parser.closeFile();
-        // std.debug.print("goto\n", .{});
         while (self.parser.hasMoreCommands()) {
-            // std.debug.print("once\n", .{});
             switch (self.parser.commandType().?) {
                 parse.CommandType.C_ARITHMETIC => try self.coder.wrtieArithmetic(self.parser.command.?),
                 parse.CommandType.C_PUSH, parse.CommandType.C_POP => try self.coder.writePushPop(self.parser.command.?),
-                else => {
-                    // std.debug.print("here\n", .{});
-                },
+                else => {},
             }
         }
     }
