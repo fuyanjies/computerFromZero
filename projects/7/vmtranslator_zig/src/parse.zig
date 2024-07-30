@@ -33,7 +33,6 @@ pub const Parse = struct {
                 return false;
             }
             self.command_type = self.argument1_table.get(argument) orelse {
-                // std.debug.print("{s}", .{argument});
                 unreachable;
             };
         }
@@ -118,16 +117,13 @@ pub const Parse = struct {
         if (self.command_iterator) |*iterator| {
             if (iterator.next()) |command| {
                 self.command = command;
-                // std.debug.print("command: {s}\n", .{self.command.?});
                 if (!self.countArguments())
                     return self.hasMoreCommands();
                 return true;
             } else {
-                // std.debug.print("fuck\n", .{});
                 return false;
             }
         } else {
-            // std.debug.print("HERE\n", .{});
             return false;
         }
     }

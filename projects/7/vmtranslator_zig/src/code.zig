@@ -148,7 +148,6 @@ pub const Code = struct {
         if (self.output) |_| {
             return error.HasStarted;
         }
-        // std.debug.print("FILE_NAME: {s}\n", .{file_name});
         if ('/' == file_name[0] or ':' == file_name[1]) {
             self.output = try std.fs.createFileAbsolute(file_name, .{});
         } else {
@@ -222,7 +221,6 @@ pub const Code = struct {
 
         if (std.mem.eql(u8, "constant", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@{0}
                     \\D = A
@@ -237,7 +235,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "pointer", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@{0}
                     \\D = M
@@ -248,7 +245,6 @@ pub const Code = struct {
                     \\
                 , .{pos + 3});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@SP
                     \\M = M - 1
@@ -261,7 +257,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "temp", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@{0}
                     \\D = M
@@ -272,7 +267,6 @@ pub const Code = struct {
                     \\
                 , .{pos + 5});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@SP
                     \\M = M - 1
@@ -285,7 +279,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "local", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@LCL
                     \\D = M
@@ -299,7 +292,6 @@ pub const Code = struct {
                     \\
                 , .{pos});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@LCL
                     \\D = M
@@ -319,7 +311,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "argument", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@ARG
                     \\D = M
@@ -333,7 +324,6 @@ pub const Code = struct {
                     \\
                 , .{pos});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@ARG
                     \\D = M
@@ -353,7 +343,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "static", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@{0}
                     \\D = M
@@ -364,7 +353,6 @@ pub const Code = struct {
                     \\
                 , .{pos + 16});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@SP
                     \\M = M - 1
@@ -377,7 +365,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "this", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@THIS
                     \\D = M
@@ -391,7 +378,6 @@ pub const Code = struct {
                     \\
                 , .{pos});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@THIS
                     \\D = M
@@ -411,7 +397,6 @@ pub const Code = struct {
             }
         } else if (std.mem.eql(u8, "that", segment)) {
             if (is_push) {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@THAT
                     \\D = M
@@ -425,7 +410,6 @@ pub const Code = struct {
                     \\
                 , .{pos});
             } else {
-                // std.debug.print("ok\n", .{});
                 try self.output.?.writer().print(
                     \\@THAT
                     \\D = M
