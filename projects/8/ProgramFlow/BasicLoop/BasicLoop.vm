@@ -7,7 +7,7 @@
 // the stack. The value n is given in argument[0], which must be 
 // initialized by the caller of this code.
 
-	push constant 0    
+    push constant 0    
 	pop local 0         // sum = 0
 label LOOP
 	push argument 0     
