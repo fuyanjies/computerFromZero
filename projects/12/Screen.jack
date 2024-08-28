@@ -14,10 +14,6 @@ class Screen {
     function void init() {
     }
 
-    /** Erases the entire screen. */
-    function void clearScreen() {
-    }
-
     /** Sets the current color, to be used for all subsequent drawXXX commands.
      *  Black is represented by true, white by false. */
     function void setColor(boolean b) {
@@ -37,6 +33,6 @@ class Screen {
     }
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
-    function void drawCircle(int x, int y, int r) {
+    function void drawCircle(int a, int b, int r) {
     }
 }
